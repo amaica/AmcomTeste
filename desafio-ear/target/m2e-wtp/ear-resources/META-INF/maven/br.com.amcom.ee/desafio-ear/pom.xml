@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>br.com.amcom.ee</groupId>
+        <artifactId>desafio</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.com.amcom.ee</groupId>
+    <artifactId>desafio-ear</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>ear</packaging>
+    <name>desafio-ear</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>br.com.amcom.ee</groupId>
+            <artifactId>desafio-ejb</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>br.com.amcom.ee</groupId>
+            <artifactId>desafio-web</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
