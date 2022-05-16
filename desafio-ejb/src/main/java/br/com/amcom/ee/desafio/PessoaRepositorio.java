@@ -1,5 +1,8 @@
 package br.com.amcom.ee.desafio;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,28 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-
-
-
-/*import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;*/
 
 @Dependent
 @Stateless
@@ -59,45 +41,16 @@ public class PessoaRepositorio {
 		return query.getResultList();
 	}
 
+	public List<PessoaEntidade> listaJson(String email) throws IOException {
 
+		ObjectMapper objectMapper = new ObjectMapper();
 
-	public void buscaPessoa() throws Exception 
-	{
-	try {
-		HttpGet request = new HttpGet("https://reqres.in/api/users?page=2");
-		CloseableHttpClient client = HttpClients.createDefault();
-		CloseableHttpResponse response = client.execute(request);
-		HttpEntity entity = response.getEntity();
-		String result = EntityUtils.toString(entity);
-		/// System.out.println(result);
-		JSONObject obj = JSONObject.parseObject(result);
-	    
+		PessoaEntidade pessoa = objectMapper.readValue(new URL("https://reqres.in/api/users?page=2&email=" + email),
+				PessoaEntidade.class);
+		System.out.println(pessoa);
+		return new ArrayList<>();
 
-	
-		
-	     
-		for (int i = 0; i < obj.getJSONArray("data").size(); i++) {
-			
-		}
-	    
-	     
-	     
-	} catch (Exception e) {
-		e.getMessage();
-		// TODO: handle exception
-	}
-		
 	}
 
-	public static void main(String[] args) {
-		PessoaRepositorio obj = new PessoaRepositorio();
-		try {
-			obj.buscaPessoa();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// TODO code application logic here
-	}
 
 }

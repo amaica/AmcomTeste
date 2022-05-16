@@ -35,9 +35,6 @@
         <dependent-module archiveName="commons-codec-1.11.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/commons-codec/commons-codec/1.11/commons-codec-1.11.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="fastjson-1.2.41.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/alibaba/fastjson/1.2.41/fastjson-1.2.41.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="desafio-web-1.0.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/desafio-web/desafio-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
