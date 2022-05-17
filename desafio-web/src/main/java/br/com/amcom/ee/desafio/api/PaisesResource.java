@@ -19,70 +19,74 @@ import javax.ws.rs.core.Response;
 import br.com.amcom.ee.desafio.Pais;
 import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.PaisesRepositorio;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/paises")
+@Api(value = "PaisesEntidade")
 public class PaisesResource {
 
 //    @Inject
 //    Logger logger;
-    private final static Logger LOGGER = Logger.getLogger(PaisesResource.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(PaisesResource.class.getName());
 
-    @Inject
-    private PaisesRepositorio paisRepositorio;
+	@Inject
+	private PaisesRepositorio paisRepositorio;
 
-  
+	@GET
+	/// @Path("/pais")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Lista Paises do arquivo Jason")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public List<PaisesEntidade> listaPaises() throws IOException {
 
-    @GET
-   /// @Path("/pais")
-    @Produces(MediaType.APPLICATION_JSON)
-    
-    public List<PaisesEntidade> listaPaises() throws IOException {
-    	
-    	
-    	return  paisRepositorio.listaJson();
-    	    	
-    }
-    
-    
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response SalvaPaistxt(Pais pais) throws FileNotFoundException {
+		return paisRepositorio.listaJson();
 
-        PaisesEntidade paisEntidade = new PaisesEntidade();
+	}
 
-        paisEntidade.setId(Instant.now().toEpochMilli());
-        paisEntidade.setGentilico(pais.gentilico);
-        paisEntidade.setNome_pais(pais.nome_pais);
-        paisEntidade.setNome_pais_int(pais.nome_pais_int);
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Salva Pais em arquivo txt")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public Response SalvaPaistxt(Pais pais) throws FileNotFoundException {
 
-        paisRepositorio.salvar(paisEntidade);
+		PaisesEntidade paisEntidade = new PaisesEntidade();
 
-        String diretorioUsuarioSistemaOperacioanal = System.getProperty("user.home");
-        PrintWriter file = new PrintWriter(diretorioUsuarioSistemaOperacioanal + "/pais.txt");
+		paisEntidade.setId(Instant.now().toEpochMilli());
+		paisEntidade.setGentilico(pais.gentilico);
+		paisEntidade.setNome_pais(pais.nome_pais);
+		paisEntidade.setNome_pais_int(pais.nome_pais_int);
 
-        file.println(pais.gentilico);
-        file.println(pais.nome_pais);
-        file.println(pais.nome_pais_int);
+		paisRepositorio.salvar(paisEntidade);
 
-        file.close();
+		String diretorioUsuarioSistemaOperacioanal = System.getProperty("user.home");
+		PrintWriter file = new PrintWriter(diretorioUsuarioSistemaOperacioanal + "/pais.txt");
 
-        return Response.ok().build();
-    }
+		file.println(pais.gentilico);
+		file.println(pais.nome_pais);
+		file.println(pais.nome_pais_int);
 
-    @GET
-    @Path("/pais")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response RetornaPaises() {
-        return Response.ok().build();
-    }
+		file.close();
 
-  
+		return Response.ok().build();
+	}
 
-   @GET
-   @Path("/pais-por-sigla")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response RetornaPaisPorSigla() {
-       return Response.ok().build();
-   }
-  
+	@GET
+	@Path("/pais")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response RetornaPaises() {
+		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/pais-por-sigla")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response RetornaPaisPorSigla() {
+		return Response.ok().build();
+	}
+
 }

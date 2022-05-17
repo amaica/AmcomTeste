@@ -1,8 +1,13 @@
 package br.com.amcom.ee.desafio.api;
 
+import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.Temperatura;
 import br.com.amcom.ee.desafio.TemperaturaEntidade;
 import br.com.amcom.ee.desafio.TemperaturaRepositorio;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -22,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/temperatura")
+@Api(value = "TemperaturaEntidade")
 public class TemperaturasResource {
 
 //    @Inject
@@ -53,6 +59,9 @@ public class TemperaturasResource {
     @GET
     @Path("/Fahrenheit/{temperatura}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Recebe temperatura para conversão: Fahrenhei,Celsius ou Kelvin")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
     public Object GetConversaoFahrenheit(@PathParam("temperatura") int temperatura) {
         Temperatura dados = new Temperatura();
 
@@ -97,6 +106,10 @@ public class TemperaturasResource {
     @GET
     @Path("/Temperatura/{temperatura}/{tipoTemperatura}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Recebe temperatura para conversão com opção de enviar o tipo de temperatura por parametro")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+    
     public Object GetRangeTemperature(@PathParam("temperatura") int temperatura, @PathParam("tipoTemperatura") String tipoTemperatura) {
         Temperatura dados = new Temperatura();
 
@@ -137,6 +150,9 @@ public class TemperaturasResource {
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Salva Temperatura em TXT")
+ 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+ 			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
     public Response SalvaTemperaturatxt(Temperatura temperatura) throws FileNotFoundException {
 
         TemperaturaEntidade temperaturaEntidade = new TemperaturaEntidade();
