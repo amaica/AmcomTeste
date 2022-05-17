@@ -19,13 +19,8 @@ import javax.ws.rs.core.Response;
 import br.com.amcom.ee.desafio.Pais;
 import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.PaisesRepositorio;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Path("/paises")
-@Api(value = "PaisesEntidade")
 public class PaisesResource {
 
 //    @Inject
@@ -38,9 +33,6 @@ public class PaisesResource {
 	@GET
 	/// @Path("/pais")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Lista Paises do arquivo Jason")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
 	public List<PaisesEntidade> listaPaises() throws IOException {
 
 		return paisRepositorio.listaJson();
@@ -49,10 +41,7 @@ public class PaisesResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Salva Pais em arquivo txt")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
-	public Response SalvaPaistxt(Pais pais) throws FileNotFoundException {
+		public Response SalvaPaistxt(Pais pais) throws FileNotFoundException {
 
 		PaisesEntidade paisEntidade = new PaisesEntidade();
 
