@@ -11,32 +11,53 @@ public class Temperatura {
     /**
      * Valor da temperatura em Fahrenheit
      */
-    public double ValorFahrenheit;
-    public double ValorCelsius;
-    public double ValorKelvin;
-
-    public double getValorFahrenheit() {
-        return ValorFahrenheit;
+    private double valorFahrenheit;
+    private double valorCelsius;
+    private double valorKelvin;
+    
+    public Temperatura() {
+    	
+    }
+    
+    public Temperatura(double valorFahrenheit, double valorCelsius, double valorKelvin) {
+    	this.valorFahrenheit = valorFahrenheit;
+    	this.valorCelsius = valorCelsius;
+    	this.valorKelvin = valorKelvin;
     }
 
-    public void setValorFahrenheit(double ValorFahrenheit) {
-        this.ValorFahrenheit = ValorFahrenheit;
+    public double getValorFahrenheit() {
+        return valorFahrenheit;
     }
 
     public double getValorCelsius() {
-        return ValorCelsius;
+        return valorCelsius;
     }
 
-    public void setValorCelsius(double ValorCelsius) {
-        this.ValorCelsius = ValorCelsius;
-    }
 
     public double getValorKelvin() {
-        return ValorKelvin;
+        return valorKelvin;
+    }
+    
+    public void valorFahrenheit(double valorFahrenheit) {
+    	this.valorFahrenheit = valorFahrenheit;
+    	this.valorCelsius = (valorFahrenheit - 32.0) / 1.8;
+    	this.valorKelvin = ((valorFahrenheit - 32.0) / 1.8) + 273.15;
     }
 
-    public void setValorKelvin(double ValorKelvin) {
-        this.ValorKelvin = ValorKelvin;
+    public void valorCelsius(double valorCelsius) {
+//    	this.valorFahrenheit = ?;
+        this.valorCelsius = valorCelsius;
+        this.valorKelvin = ((valorCelsius - 32.0) / 1.8) + 273.15;
     }
+    
+
+    public void valorKelvin(double valorKelvin) {
+        this.valorKelvin = valorKelvin;
+//        this.valorFahrenheit = ?;
+        this.valorCelsius = (273 - valorKelvin);
+        this.valorKelvin = valorKelvin;
+    }
+
+
 
 }

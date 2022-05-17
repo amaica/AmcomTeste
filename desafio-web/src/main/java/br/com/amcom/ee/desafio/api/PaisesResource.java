@@ -31,7 +31,6 @@ public class PaisesResource {
 	private PaisesRepositorio paisRepositorio;
 
 	@GET
-	/// @Path("/pais")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PaisesEntidade> listaPaises() throws IOException {
 
@@ -41,7 +40,7 @@ public class PaisesResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-		public Response SalvaPaistxt(Pais pais) throws FileNotFoundException {
+		public Response salvaPaistxt(Pais pais) throws FileNotFoundException {
 
 		PaisesEntidade paisEntidade = new PaisesEntidade();
 
@@ -64,18 +63,5 @@ public class PaisesResource {
 		return Response.ok().build();
 	}
 
-	@GET
-	@Path("/pais")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response RetornaPaises() {
-		return Response.ok().build();
-	}
-
-	@GET
-	@Path("/pais-por-sigla")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response RetornaPaisPorSigla() {
-		return Response.ok().build();
-	}
 
 }

@@ -3,9 +3,9 @@ package br.com.amcom.ee.desafio.api;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,17 +17,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.Temperatura;
 import br.com.amcom.ee.desafio.TemperaturaEntidade;
 import br.com.amcom.ee.desafio.TemperaturaRepositorio;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Path("/temperatura")
-@Api(value = "TemperaturaEntidade")
+//@Api(value = "TemperaturaEntidade")
 public class TemperaturasResource {
 
 //    @Inject
@@ -40,26 +35,24 @@ public class TemperaturasResource {
 	@GET
 	@Path("/Fahrenheit/{temperatura}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Recebe temperatura para conversão: Fahrenhei,Celsius ou Kelvin")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
-	public Object GetConversaoFahrenheit(@PathParam("temperatura") int temperatura) {
+//	@ApiOperation(value = "Recebe temperatura para conversão: Fahrenhei,Celsius ou Kelvin")
+//	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+//			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public Object getConversaoFahrenheit(@PathParam("temperatura") int temperatura) {
 		Temperatura dados = new Temperatura();
 
 		try {
 			LOGGER.info(String.format("Recebida temperatura para conversão: %s", temperatura));
 
-			dados.ValorFahrenheit = temperatura;
-			dados.ValorCelsius = (temperatura - 32.0) / 1.8;
-			dados.ValorKelvin = dados.ValorCelsius + 273.15;
+			dados.valorFahrenheit(temperatura);
 
 		} catch (Exception err) {
 			LOGGER.info("Ocorreu um problema ao converter: " + err.getMessage());
 		}
 
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorCelsius));
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorFahrenheit));
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorKelvin));
+		LOGGER.info(String.format("Resultado Celsius: %s", dados.getValorCelsius()));
+		LOGGER.info(String.format("Resultado Fahrenheit: %s", dados.getValorFahrenheit()));
+		LOGGER.info(String.format("Resultado Kelvin: %s", dados.getValorKelvin()));
 		return dados;
 	}
 
@@ -68,29 +61,22 @@ public class TemperaturasResource {
 	public List<Temperatura> listaTemperatura() {
 		List<TemperaturaEntidade> temperaturaEntidades = temperaturaRepositorio.listarTodas();
 
-		List<Temperatura> temperaturas = new ArrayList<Temperatura>();
+		List<Temperatura> temperaturas = temperaturaEntidades.stream().map(t -> 
+			new Temperatura(t.getValorFahrenheit(), t.getValorCelsius(), t.getValorKelvin())
+		).collect(Collectors.toList());
 
-		for (TemperaturaEntidade temperaturaEntidade : temperaturaEntidades) {
-			Temperatura temperatura = new Temperatura();
-
-			temperatura.ValorKelvin = temperaturaEntidade.getValorKelvin();
-			temperatura.ValorFahrenheit = temperaturaEntidade.getValorCelsius();
-			temperatura.ValorCelsius = temperaturaEntidade.getValorFahrenheit();
-
-			temperaturas.add(temperatura);
-		}
 
 		return temperaturas;
 	}
 
 	@GET
-	@Path("/Temperatura/{temperatura}/{tipoTemperatura}")
+	@Path("/{temperatura}/{tipoTemperatura}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Recebe temperatura para conversão com opção de enviar o tipo de temperatura por parametro")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+//	@ApiOperation(value = "Recebe temperatura para conversão com opção de enviar o tipo de temperatura por parametro")
+//	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+//			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
 
-	public Object GetRangeTemperature(@PathParam("temperatura") int temperatura,
+	public Object getRangeTemperature(@PathParam("temperatura") int temperatura,
 			@PathParam("tipoTemperatura") String tipoTemperatura) {
 		Temperatura dados = new Temperatura();
 
@@ -98,18 +84,18 @@ public class TemperaturasResource {
 			if (temperatura >= 18 || temperatura <= 25) {
 				switch (tipoTemperatura) {
 				case "FAHRENHEIT":
-					dados.ValorFahrenheit = temperatura;
-					LOGGER.info(String.format("Resultado FAHRENHEIT", dados.ValorFahrenheit));
+					dados.valorFahrenheit(temperatura);
+					LOGGER.info(String.format("Resultado FAHRENHEIT", dados.getValorFahrenheit()));
 					break;
 
 				case "KELVIN":
-					dados.ValorKelvin = dados.ValorCelsius + 273.15;
-					LOGGER.info(String.format("Resultado concluído:", dados.ValorCelsius));
+					dados.valorKelvin(temperatura);
+					LOGGER.info(String.format("Resultado KELVIN:", dados.getValorKelvin()));
 					break;
 
 				default:
-					dados.ValorCelsius = (temperatura - 32.0) / 1.8;
-					LOGGER.info(String.format("Resultado concluído:", dados.ValorCelsius));
+					dados.valorCelsius(temperatura);
+					LOGGER.info(String.format("Resultado CELSIUS:", dados.getValorCelsius()));
 					break;
 				}
 
@@ -121,34 +107,34 @@ public class TemperaturasResource {
 			LOGGER.info("Ocorreu um problema : " + err.getMessage());
 		}
 
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorCelsius));
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorFahrenheit));
-		LOGGER.info(String.format("Resultado concluído: {0}", dados.ValorKelvin));
+		LOGGER.info(String.format("Resultado concluído: %s", dados.getValorCelsius()));
+		LOGGER.info(String.format("Resultado concluído: %s", dados.getValorFahrenheit()));
+		LOGGER.info(String.format("Resultado concluído: %s", dados.getValorKelvin()));
 		return dados;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Salva Temperatura em TXT")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
-	public Response SalvaTemperaturatxt(Temperatura temperatura) throws FileNotFoundException {
+//	@ApiOperation(value = "Salva Temperatura em TXT")
+//	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+//			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public Response salvaTemperaturatxt(Temperatura temperatura) throws FileNotFoundException {
 
 		TemperaturaEntidade temperaturaEntidade = new TemperaturaEntidade();
 
 		temperaturaEntidade.setId(Instant.now().toEpochMilli());
-		temperaturaEntidade.setValorCelsius(temperatura.ValorCelsius);
-		temperaturaEntidade.setValorFahrenheit(temperatura.ValorFahrenheit);
-		temperaturaEntidade.setValorKelvin(temperatura.ValorKelvin);
+		temperaturaEntidade.setValorCelsius(temperatura.getValorCelsius());
+		temperaturaEntidade.setValorFahrenheit(temperatura.getValorFahrenheit());
+		temperaturaEntidade.setValorKelvin(temperatura.getValorKelvin());
 
 		temperaturaRepositorio.salvar(temperaturaEntidade);
 
 		String diretorioUsuarioSistemaOperacioanal = System.getProperty("user.home");
 		PrintWriter file = new PrintWriter(diretorioUsuarioSistemaOperacioanal + "//temperatura.txt");
 
-		file.println(temperatura.ValorKelvin);
-		file.println(temperatura.ValorCelsius);
-		file.println(temperatura.ValorFahrenheit);
+		file.println(temperatura.getValorKelvin());
+		file.println(temperatura.getValorCelsius());
+		file.println(temperatura.getValorFahrenheit());
 
 		file.close();
 

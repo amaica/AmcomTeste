@@ -17,17 +17,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.Pessoa;
 import br.com.amcom.ee.desafio.PessoaEntidade;
 import br.com.amcom.ee.desafio.PessoaRepositorio;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Path("/pessoas")
-@Api(value = "PessoaEntidade")
+//@Api(value = "PessoaEntidade")
 public class PessoaResource {
 
 //    @Inject
@@ -43,10 +38,10 @@ public class PessoaResource {
 	@GET
 	@Path("/{email}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = " Retornar dados da API https://reqres.in/api/users com filtro pelo email ")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
-	public Object GetPessoaPorEmail(@PathParam("email") String email) throws Exception {
+//	@ApiOperation(value = " Retornar dados da API https://reqres.in/api/users com filtro pelo email ")
+//	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+//			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public Object getPessoaPorEmail(@PathParam("email") String email) throws Exception {
 
 		pessoaRepositorio.listaJson(email);
 		return email;
@@ -76,10 +71,10 @@ public class PessoaResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Salva Pessoas em TXT ")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
-			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
-	public Response SalvaPaistxt(Pessoa pessoa) throws FileNotFoundException {
+//	@ApiOperation(value = "Salva Pessoas em TXT ")
+//	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = PaisesEntidade.class),
+//			@ApiResponse(code = 204, message = "Nenhum conteúdo") })
+	public Response salvaPaistxt(Pessoa pessoa) throws FileNotFoundException {
 
 		PessoaEntidade paisEntidade = new PessoaEntidade();
 
