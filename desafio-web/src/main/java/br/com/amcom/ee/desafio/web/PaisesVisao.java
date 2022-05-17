@@ -1,16 +1,19 @@
 package br.com.amcom.ee.desafio.web;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.PrimeFaces;
+
 import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.PaisesRepositorio;
 import br.com.amcom.ee.desafio.util.FacesUtil;
-import java.io.Serializable;
 
 @Named
 @ViewScoped
@@ -30,7 +33,7 @@ public class PaisesVisao implements Serializable {
     private void carregaPaises() {
     	if (FacesUtil.isNotPostback()) {
         paisList = listaPaises();
-        this.objeto = new PaisesEntidade();
+       
     	}
     }
 
@@ -77,9 +80,18 @@ public class PaisesVisao implements Serializable {
     
     public void salvar() {
     	try {
-    		paisesRepositorio.salvar(this.objeto);
+    		if(this.objeto.getId()!=null) {
+    			paisesRepositorio.update(this.objeto);
+    		}else {
+    			paisesRepositorio.salvar(this.objeto);
+    			
+       		 
+    		}
+    		FacesUtil.addInfoMessage("Salvo com sucesso!");
     		this.objeto = new PaisesEntidade();
-    		 paisList = listaPaises();
+    		paisList = listaPaises();
+    		FacesContext.getCurrentInstance().getExternalContext().redirect("/desafio-web-1.0.0-SNAPSHOT/paises.xhtml");
+			PrimeFaces.current().ajax().update(":form1");
 		} catch (Exception e) {
 			e.getMessage();
 			// TODO: handle exception

@@ -30,6 +30,11 @@ public class PaisesRepositorio {
 	@PersistenceContext
 	private EntityManager em;
 
+	public void update(PaisesEntidade paisesEntidade) {
+	
+		em.merge(paisesEntidade);
+		
+    }
 	public void salvar(@NotNull PaisesEntidade paisesEntidade) {
 		System.out.println("Salvando pais: +++++" + paisesEntidade);
 		em.persist(paisesEntidade);

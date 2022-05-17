@@ -21,7 +21,11 @@ public class TemperaturaRepositorio {
 
     @PersistenceContext
     private EntityManager em;
-
+    public void update(TemperaturaEntidade temperaturaEntidade) {
+    	
+		em.merge(temperaturaEntidade);
+		
+    }
     public void salvar(@NotNull TemperaturaEntidade temperaturaEntidade) {
         System.out.println("Salvando temperatura: " + temperaturaEntidade);
         em.persist(temperaturaEntidade);

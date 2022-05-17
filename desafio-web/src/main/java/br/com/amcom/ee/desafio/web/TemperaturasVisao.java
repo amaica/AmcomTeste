@@ -4,10 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.PrimeFaces;
+
+import br.com.amcom.ee.desafio.PaisesEntidade;
 import br.com.amcom.ee.desafio.TemperaturaEntidade;
 import br.com.amcom.ee.desafio.TemperaturaRepositorio;
 import br.com.amcom.ee.desafio.util.FacesUtil;
@@ -29,14 +33,10 @@ public class TemperaturasVisao implements Serializable {
 	@PostConstruct
 	private void carregaTemperaturas() {
 		if (FacesUtil.isNotPostback()) {
-		temperaturas = listaTemperatura();
-	
+			temperaturas = listaTemperatura();
+
 		}
 	}
-
-	
-
-	
 
 	private List<TemperaturaEntidade> listaTemperatura() {
 		List<TemperaturaEntidade> temperaturaEntidades = temperaturaRepositorio.listarTodas();
@@ -87,11 +87,20 @@ public class TemperaturasVisao implements Serializable {
 
 	public void salvar() {
 		try {
-		
-			temperaturaRepositorio.salvar(this.objeto);
-			temperaturas.add(this.objeto);
-			//this.objeto = new TemperaturaEntidade();
+
+			if (this.objeto.getId() != null) {
+				temperaturaRepositorio.update(this.objeto);
+			} else {
+				temperaturaRepositorio.salvar(this.objeto);
+
+			}
+			FacesUtil.addInfoMessage("Salvo com sucesso!");
+			this.objeto = new TemperaturaEntidade();
 			carregaTemperaturas();
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect("/desafio-web-1.0.0-SNAPSHOT/temperaturas.xhtml");
+			PrimeFaces.current().ajax().update(":form1");
+
 		} catch (Exception e) {
 			e.getMessage();
 			// TODO: handle exception
