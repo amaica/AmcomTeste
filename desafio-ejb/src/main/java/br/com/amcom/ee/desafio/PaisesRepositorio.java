@@ -1,6 +1,8 @@
 package br.com.amcom.ee.desafio;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,15 +34,20 @@ public class PaisesRepositorio {
 		System.out.println("Salvando pais: +++++" + paisesEntidade);
 		em.persist(paisesEntidade);
 	}
-
+	///1)	Retornar a lista de países como origem o arquivo ‘países.json’ e disponibilizar as informações em um endpoint.
+	///  http://127.0.0.1:8080/desafio-web-1.0.0-SNAPSHOT/api/paises
 	public List<PaisesEntidade> listaJson() throws IOException {
 
-		/// this.getclass().getclassloader().getresourceasstream("paises.json");
-		Path path = Paths
-				.get("/home/aurelio/Downloads/Desafio.AMcom.Java.EE/desafio-ejb/src/main/resources/paises.json");
+	
+	
 
 		try {
-
+			
+			 URL url = this.getClass()
+				        .getClassLoader()
+				        .getResource("paises.json");
+			 File file = new File(url.getFile());			
+		    Path path = Paths.get(file.getAbsolutePath());
 			String content = Files.readString(path);
 			System.out.println(content);
 			final var objectMapper = new ObjectMapper();
